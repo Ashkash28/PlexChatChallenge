@@ -2,35 +2,46 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
-
-const Container = styled.View`
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  padding-vertical: 5;
-`;
-
-const Image = styled.Image`
-  height: 10;
-  width: 10;
-`;
-
-const Text = styled.Text`
-  font-size: 10;
-
-`;
+import {
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
 type Props = {
-  imageUrl: string,
+  bookAuthor: string,
   bookTitle: string,
 }
 
 export default function ListItem(props: Props) {
-  const { imageUrl, bookTitle } = props;
+  const { bookAuthor, bookTitle } = props;
   return (
     <Container>
-      <Image source={{ uri: imageUrl }} />
-      <Text>{bookTitle}</Text>
+        <View>
+            <Text numberOfLines={2} style={styles.title}>{bookTitle}</Text>
+        </View>
+        <View>
+            <Text numberOfLines={1} style={styles.author}>By: {bookAuthor}</Text>
+        </View>
     </Container>
   );
 }
+
+const Container = styled.View`
+  padding-vertical: 10;
+`;
+
+const styles = StyleSheet.create({
+  title: {
+    alignItems: 'center',
+    flex: 1,
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  author: {
+    flex: 1,
+    fontStyle: 'italic',
+    marginTop: 5,
+    textAlign: 'right',
+  },
+});

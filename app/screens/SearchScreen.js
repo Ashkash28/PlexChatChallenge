@@ -10,14 +10,6 @@ import SearchInput from '../components/SearchInput';
 import ListItem from '../components/ListItem';
 import type { SearchStore } from './../config/types';
 
-type Props = {
-  searchStore: SearchStore;
-};
-
-const Container = styled.View`
-  margin: 15;
-`;
-
 @inject('searchStore')
 @observer
 export default class SearchScreen extends Component {
@@ -41,7 +33,7 @@ export default class SearchScreen extends Component {
         <SearchInput
           value={this.query}
           onChangeText={(value) => { this.onTextInputChange(value); }}
-          placeholder="Search..."
+          placeholder="Search books..."
         />
         {this.props.searchStore.books && (
           <FlatList
@@ -49,7 +41,7 @@ export default class SearchScreen extends Component {
             keyExtractor={(_, i) => i}
             renderItem={({ item }) => (
               <ListItem
-                imageUrl={item.volumeInfo.imageLinks.smallThumbnail}
+                bookAuthor={item.volumeInfo.authors[0]}
                 bookTitle={item.volumeInfo.title}
               />
             )}
@@ -59,3 +51,11 @@ export default class SearchScreen extends Component {
     );
   }
 }
+
+type Props = {
+  searchStore: SearchStore;
+};
+
+const Container = styled.View`
+  margin: 15;
+`;
