@@ -1,47 +1,61 @@
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
+//External Imports
 import React, { Component } from 'react';
+import { FlatList } from 'react-native';
+import { observable } from 'mobx';
+import { observer, inject } from 'mobx-react';
+import styled from 'styled-components/native';
+import lodash, { debounce } from 'lodash';
+//Internal Imports
+import SearchInput from '../components/SearchInput';
+import ListItem from '../components/ListItem';
+import type { SearchStore } from './../config/types';
 
+type Props = {
+  searchStore: SearchStore;
+};
 
+const Container = styled.View`
+  margin: 15;
+`;
+
+@inject('searchStore')
+@observer
 export default class SearchScreen extends Component {
+  props: Props;
+  @observable query = '';
+
+  static navigationOptions = {
+    title: 'Google Books',
+  }
+
+  debounceInput = debounce((query) => { this.props.searchStore.getBookList(query); }, 1000);
+
+  onTextInputChange = (value: string) => {
+    this.query = value;
+    this.debounceInput(value);
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <Container>
+        <SearchInput
+          value={this.query}
+          onChangeText={(value) => { this.onTextInputChange(value); }}
+          placeholder="Search..."
+        />
+        {this.props.searchStore.books && (
+          <FlatList
+            data={this.props.searchStore.books}
+            keyExtractor={(_, i) => i}
+            renderItem={({ item }) => (
+              <ListItem
+                imageUrl={item.volumeInfo.imageLinks.smallThumbnail}
+                bookTitle={item.volumeInfo.title}
+              />
+            )}
+          />
+        )}
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
