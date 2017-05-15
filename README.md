@@ -26,9 +26,9 @@ I was also stuck for some time figuring out why the google images I tried to loa
 ## Road Map
 Given more time I would implement:
 
+* Enhance UI
 * Android Compatibility
 * More testing
 * Backend functionality to 'favorite' books under different profiles
-* Enhance UI
 
 
